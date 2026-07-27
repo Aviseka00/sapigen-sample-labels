@@ -1110,3 +1110,252 @@ select {
     padding: 0;
   }
 }
+
+/* Custom templates & custom labels */
+.format-badge {
+  margin: 0.75rem 0 1rem;
+  padding: 0.65rem 0.8rem;
+  border-radius: 12px;
+  background: #dff5fd;
+  color: #2f5061;
+  font-size: 0.88rem;
+}
+
+.side-link {
+  display: inline-block;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: #bf548f;
+}
+
+.size-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.check-row {
+  display: flex !important;
+  align-items: center;
+  gap: 0.55rem;
+  margin-bottom: 0.85rem;
+  color: var(--ink);
+  font-size: 0.9rem;
+}
+
+.check-row input {
+  width: auto;
+}
+
+.template-builder .template-canvas {
+  gap: 1rem;
+  justify-items: stretch;
+}
+
+.cell-editor h3 {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+}
+
+.cell-editor-list {
+  display: grid;
+  gap: 0.55rem;
+  max-height: 280px;
+  overflow: auto;
+  margin-top: 0.75rem;
+}
+
+.cell-editor-item {
+  display: grid;
+  grid-template-columns: 52px 1fr auto;
+  gap: 0.55rem;
+  align-items: center;
+}
+
+.cell-editor-item input {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0.55rem 0.7rem;
+  background: #fff;
+}
+
+.template-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.85rem 0.9rem;
+  border: 1px solid var(--line);
+  background: #fff;
+  border-radius: 13px;
+}
+
+.template-row a {
+  color: inherit;
+  flex: 1;
+  display: grid;
+  gap: 0.2rem;
+}
+
+.template-row span {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.template-actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.linkish {
+  border: 0;
+  background: transparent;
+  color: #bf548f;
+  cursor: pointer;
+  padding: 0;
+  font: inherit;
+}
+
+.standard-card {
+  background:
+    radial-gradient(circle at 90% 10%, rgba(229, 127, 132, 0.16), transparent 40%),
+    linear-gradient(135deg, #fff, #dff5fd);
+}
+
+.custom-label {
+  background: #fff;
+  border: 1px solid #7fa8bb;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 10px 28px rgba(47, 80, 97, 0.12);
+  margin: 0 auto;
+}
+
+.custom-label-header {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.55rem 0.65rem;
+  background: linear-gradient(135deg, #2f5061, #3d6478);
+  color: #fff;
+}
+
+.custom-label-logo {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+}
+
+.custom-label-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+}
+
+.custom-label-grid {
+  display: grid;
+  width: 100%;
+}
+
+.custom-cell {
+  border-right: 1px solid #b7d7e6;
+  border-bottom: 1px solid #b7d7e6;
+  min-height: 40px;
+  padding: 0.35rem 0.45rem;
+}
+
+.custom-cell--writeup {
+  background: linear-gradient(90deg, #fde8ea, #fff2f3);
+  color: #2f5061;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+}
+
+.custom-cell--input {
+  background: #fff;
+}
+
+.custom-cell-writeup {
+  font-size: 0.86rem;
+}
+
+.custom-cell-stack {
+  display: grid;
+  gap: 0.15rem;
+  height: 100%;
+}
+
+.custom-cell-hint {
+  font-size: 0.68rem;
+  color: #6a8490;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.custom-cell-input {
+  width: 100%;
+  border: 0;
+  outline: none;
+  background: transparent;
+  font: inherit;
+  color: #2f5061;
+  padding: 0.15rem 0;
+}
+
+.custom-cell-input:focus {
+  box-shadow: inset 0 -2px 0 #e57f84;
+}
+
+.custom-cell-value {
+  font-size: 0.9rem;
+  color: #2f5061;
+  min-height: 1.2em;
+}
+
+.custom-label--compact {
+  width: 100% !important;
+  min-height: 0 !important;
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+.custom-label--compact .custom-label-logo {
+  width: 28px;
+  height: 28px;
+}
+
+.custom-label--compact .custom-label-title,
+.custom-label--compact .custom-cell-writeup,
+.custom-label--compact .custom-cell-value,
+.custom-label--compact .custom-cell-input {
+  font-size: 0.72rem;
+}
+
+.custom-label--compact .custom-cell {
+  min-height: 28px;
+  padding: 0.2rem 0.3rem;
+}
+
+.a4-slot .custom-label {
+  width: 100% !important;
+  height: 100%;
+}
+
+.editor-side > label {
+  display: grid;
+  gap: 0.35rem;
+  margin-bottom: 0.9rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.editor-side > label select {
+  border: 1px solid var(--line);
+  background: #fff;
+  padding: 0.75rem 0.85rem;
+  border-radius: 10px;
+  color: var(--ink);
+}

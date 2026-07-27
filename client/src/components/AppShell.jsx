@@ -21,6 +21,7 @@ export default function AppShell({ children }) {
             Home
           </NavLink>
           <NavLink to="/create">Create</NavLink>
+          <NavLink to="/templates">Templates</NavLink>
           <NavLink to="/archive">Archive</NavLink>
         </nav>
 

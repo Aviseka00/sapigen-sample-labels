@@ -1,11 +1,17 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../auth';
 import AppShell from '../components/AppShell';
 import SampleLabel from '../components/SampleLabel';
+import CustomLabel from '../components/CustomLabel';
 import PrintSheet from '../components/PrintSheet';
 
-const emptyLabel = {
+const emptyStandard = {
+  labelType: 'standard',
+  template: null,
+  templateName: 'Standard Sapigen',
+  templateSnapshot: null,
+  customValues: {},
   productName: '',
   batchNumber: '',
   sampleStage: '',
@@ -22,9 +28,11 @@ const emptyLabel = {
 
 export default function LabelEditor() {
   const { id } = useParams();
+  const [params] = useSearchParams();
   const { api } = useAuth();
   const navigate = useNavigate();
-  const [data, setData] = useState(emptyLabel);
+  const [data, setData] = useState(emptyStandard);
+  const [templates, setTemplates] = useState([]);
   const [labelId, setLabelId] = useState(id || null);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
@@ -32,20 +40,86 @@ export default function LabelEditor() {
   const [printOpen, setPrintOpen] = useState(false);
 
   useEffect(() => {
-    if (!id) {
+    api('/templates')
+      .then(setTemplates)
+      .catch(() => setTemplates([]));
+  }, [api]);
+
+  useEffect(() => {
+    if (id) {
+      api(`/labels/${id}`)
+        .then((label) => {
+          setData(label);
+          setLabelId(label._id);
+        })
+        .catch((err) => setError(err.message));
+      return;
+    }
+
+    const type = params.get('type') === 'custom' ? 'custom' : 'standard';
+    const templateId = params.get('template');
+
+    if (type === 'custom' && templateId) {
+      api(`/templates/${templateId}`)
+        .then((tpl) => {
+          const customValues = {};
+          (tpl.cells || []).forEach((cell) => {
+            if (cell.isInput) customValues[cell.key] = '';
+          });
+          setData({
+            ...emptyStandard,
+            labelType: 'custom',
+            template: tpl._id,
+            templateName: tpl.name,
+            templateSnapshot: tpl,
+            customValues,
+            paperSize: tpl.paperSize || 'A4',
+            labelsPerPage: tpl.labelsPerPage || 4,
+            sampleDate: new Date().toLocaleDateString('en-GB'),
+          });
+        })
+        .catch((err) => setError(err.message));
+    } else {
       setData({
-        ...emptyLabel,
+        ...emptyStandard,
         sampleDate: new Date().toLocaleDateString('en-GB'),
+      });
+    }
+  }, [id, api, params]);
+
+  async function applyTemplate(templateId) {
+    if (!templateId || templateId === 'standard') {
+      setData({
+        ...emptyStandard,
+        sampleDate: new Date().toLocaleDateString('en-GB'),
+        paperSize: data.paperSize,
+        labelsPerPage: data.labelsPerPage,
+        quantity: data.quantity,
       });
       return;
     }
-    api(`/labels/${id}`)
-      .then((label) => {
-        setData(label);
-        setLabelId(label._id);
-      })
-      .catch((err) => setError(err.message));
-  }, [id, api]);
+    try {
+      const tpl = await api(`/templates/${templateId}`);
+      const customValues = {};
+      (tpl.cells || []).forEach((cell) => {
+        if (cell.isInput) customValues[cell.key] = '';
+      });
+      setData({
+        ...emptyStandard,
+        labelType: 'custom',
+        template: tpl._id,
+        templateName: tpl.name,
+        templateSnapshot: tpl,
+        customValues,
+        paperSize: tpl.paperSize || data.paperSize,
+        labelsPerPage: tpl.labelsPerPage || data.labelsPerPage,
+        quantity: data.quantity,
+        sampleDate: new Date().toLocaleDateString('en-GB'),
+      });
+    } catch (err) {
+      setError(err.message);
+    }
+  }
 
   async function saveLabel(status = 'saved') {
     setBusy(true);
@@ -101,6 +175,8 @@ export default function LabelEditor() {
     }
   }
 
+  const isCustom = data.labelType === 'custom' && data.templateSnapshot;
+
   return (
     <AppShell>
       <div className="editor-layout">
@@ -111,8 +187,33 @@ export default function LabelEditor() {
           </div>
 
           <p className="side-note">
-            Fill the blank label on the right. Set paper size and how many labels you need on A4.
+            Use the standard Sapigen format, or pick one of your saved custom templates.
           </p>
+
+          {!id && (
+            <label>
+              Label format
+              <select
+                value={isCustom ? data.template : 'standard'}
+                onChange={(e) => applyTemplate(e.target.value)}
+              >
+                <option value="standard">Standard Sapigen format</option>
+                {templates.map((tpl) => (
+                  <option key={tpl._id} value={tpl._id}>
+                    {tpl.name} ({tpl.rows}×{tpl.columns})
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
+
+          {isCustom && (
+            <p className="format-badge">
+              Template: <strong>{data.templateName}</strong> · {data.templateSnapshot.rows}×
+              {data.templateSnapshot.columns} · {data.templateSnapshot.widthMm}×
+              {data.templateSnapshot.heightMm} mm
+            </p>
+          )}
 
           <div className="settings-grid">
             <label>
@@ -175,13 +276,26 @@ export default function LabelEditor() {
             </button>
           </div>
 
+          <Link className="side-link" to="/templates/new">
+            Create a new custom template →
+          </Link>
+
           {message && <div className="form-success">{message}</div>}
           {error && <div className="form-error">{error}</div>}
         </aside>
 
         <section className="editor-canvas">
           <div className="canvas-frame">
-            <SampleLabel data={data} editable onChange={setData} />
+            {isCustom ? (
+              <CustomLabel
+                template={data.templateSnapshot}
+                values={data.customValues || {}}
+                editable
+                onChangeValues={(customValues) => setData({ ...data, customValues })}
+              />
+            ) : (
+              <SampleLabel data={data} editable onChange={setData} />
+            )}
           </div>
           <p className="canvas-hint">Click any field on the label to enter details</p>
         </section>

@@ -27,11 +27,15 @@ export default function Dashboard() {
             Hello, <em>{user.displayName || user.username}</em>
           </h1>
           <p className="lede">
-            Create batch sample labels, set A4 layout, save to your date folder, then print.
+            Create batch sample labels with the standard Sapigen format, or use your own custom
+            templates with rows, columns, and writeups.
           </p>
           <div className="hero-actions">
             <Link className="btn btn-primary" to="/create">
               Create Sample Label
+            </Link>
+            <Link className="btn btn-ghost" to="/templates">
+              My Templates
             </Link>
             <Link className="btn btn-ghost" to="/archive">
               View Archive
@@ -65,9 +69,14 @@ export default function Dashboard() {
               {recent.map((item) => (
                 <li key={item._id}>
                   <Link to={`/edit/${item._id}`}>
-                    <strong>{item.productName || 'Untitled product'}</strong>
+                    <strong>
+                      {item.labelType === 'custom'
+                        ? item.templateName || 'Custom label'
+                        : item.productName || 'Untitled product'}
+                    </strong>
                     <span>
-                      {item.batchNumber || 'No batch'} · {item.folderDate} · {item.status}
+                      {item.labelType === 'custom' ? 'Custom' : item.batchNumber || 'No batch'} ·{' '}
+                      {item.folderDate} · {item.status}
                     </span>
                   </Link>
                 </li>

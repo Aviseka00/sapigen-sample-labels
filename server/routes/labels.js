@@ -67,6 +67,11 @@ router.post('/', async (req, res) => {
       user: req.user.id,
       username: req.user.username,
       folderDate: data.folderDate || todayFolder(),
+      labelType: data.labelType === 'custom' ? 'custom' : 'standard',
+      template: data.template || null,
+      templateName: data.templateName || '',
+      templateSnapshot: data.templateSnapshot || null,
+      customValues: data.customValues || {},
       productName: data.productName || '',
       batchNumber: data.batchNumber || '',
       sampleStage: data.sampleStage || '',
@@ -89,6 +94,11 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
   try {
     const allowed = [
+      'labelType',
+      'template',
+      'templateName',
+      'templateSnapshot',
+      'customValues',
       'productName',
       'batchNumber',
       'sampleStage',

@@ -5,6 +5,11 @@ const labelSchema = new mongoose.Schema(
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
     username: { type: String, required: true, index: true },
     folderDate: { type: String, required: true, index: true }, // YYYY-MM-DD
+    labelType: { type: String, enum: ['standard', 'custom'], default: 'standard' },
+    template: { type: mongoose.Schema.Types.ObjectId, ref: 'Template', default: null },
+    templateName: { type: String, default: '' },
+    templateSnapshot: { type: mongoose.Schema.Types.Mixed, default: null },
+    customValues: { type: mongoose.Schema.Types.Mixed, default: {} },
     productName: { type: String, default: '' },
     batchNumber: { type: String, default: '' },
     sampleStage: { type: String, default: '' },

@@ -4,6 +4,8 @@ import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/Dashboard';
 import LabelEditor from './pages/LabelEditor';
 import ArchivePage from './pages/ArchivePage';
+import TemplatesPage from './pages/TemplatesPage';
+import TemplateBuilder from './pages/TemplateBuilder';
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth();
@@ -51,6 +53,30 @@ export default function App() {
         element={
           <PrivateRoute>
             <ArchivePage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/templates"
+        element={
+          <PrivateRoute>
+            <TemplatesPage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/templates/new"
+        element={
+          <PrivateRoute>
+            <TemplateBuilder />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/templates/:id"
+        element={
+          <PrivateRoute>
+            <TemplateBuilder />
           </PrivateRoute>
         }
       />

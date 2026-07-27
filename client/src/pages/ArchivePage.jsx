@@ -77,10 +77,9 @@ export default function ArchivePage() {
               <table className="archive-table">
                 <thead>
                   <tr>
-                    <th>Product</th>
-                    <th>Batch</th>
-                    <th>Stage</th>
-                    <th>Qty</th>
+                    <th>Label</th>
+                    <th>Format</th>
+                    <th>Batch / detail</th>
                     <th>Status</th>
                     <th>User</th>
                     <th></th>
@@ -89,10 +88,17 @@ export default function ArchivePage() {
                 <tbody>
                   {labels.map((item) => (
                     <tr key={item._id}>
-                      <td>{item.productName || '—'}</td>
-                      <td>{item.batchNumber || '—'}</td>
-                      <td>{item.sampleStage || '—'}</td>
-                      <td>{item.sampleQty || '—'}</td>
+                      <td>
+                        {item.labelType === 'custom'
+                          ? item.templateName || 'Custom'
+                          : item.productName || '—'}
+                      </td>
+                      <td>{item.labelType === 'custom' ? 'Custom' : 'Standard'}</td>
+                      <td>
+                        {item.labelType === 'custom'
+                          ? `${item.templateSnapshot?.rows || '—'}×${item.templateSnapshot?.columns || '—'}`
+                          : item.batchNumber || '—'}
+                      </td>
                       <td>
                         <span className={`status-pill status-${item.status}`}>{item.status}</span>
                       </td>

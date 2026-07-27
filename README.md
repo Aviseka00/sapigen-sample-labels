@@ -43,11 +43,21 @@ Open [http://localhost:5173](http://localhost:5173).
 ## Features
 
 - Login / register
-- Create sample labels matching the official blank layout
+- **Standard Sapigen sample label** (official format kept as-is)
+- **Custom templates** — set your own rows, columns, size (mm), writeups, and save for reuse
 - Set A4 layout (1 / 2 / 4 / 6 / 8 labels per page) and total quantity
 - Save labels to MongoDB
 - Print preview → browser print
 - Archive by **date folder** and **user**
+
+## Custom templates
+
+1. Open **Templates** in the app (or go to `/templates`)
+2. Click **New custom template**
+3. Set name, rows, columns, width/height (mm), optional header/logo
+4. Add writeup text for each cell and mark which cells are fillable inputs
+5. Save the template
+6. On **Create**, choose your template from **Label format** (or keep Standard Sapigen)
 
 ## API
 
@@ -60,3 +70,7 @@ Open [http://localhost:5173](http://localhost:5173).
 | POST | `/api/labels` | Create label |
 | PUT | `/api/labels/:id` | Update label |
 | POST | `/api/labels/:id/print` | Mark printed & file by date |
+| GET | `/api/templates` | List your templates |
+| POST | `/api/templates` | Create custom template |
+| PUT | `/api/templates/:id` | Update template |
+| DELETE | `/api/templates/:id` | Delete template |

@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import SampleLabel from './SampleLabel';
+import CustomLabel from './CustomLabel';
 
 /**
  * labelsPerPage presets for A4:
@@ -20,6 +21,7 @@ export default function PrintSheet({ data, open, onClose, onPrinted }) {
   const quantity = Math.max(1, Number(data?.quantity) || 1);
   const perPage = Number(data?.labelsPerPage) || 4;
   const grid = getGrid(perPage);
+  const isCustom = data?.labelType === 'custom' && data?.templateSnapshot;
   const pages = useMemo(() => {
     const total = quantity;
     const pageCount = Math.ceil(total / perPage);
@@ -53,6 +55,7 @@ export default function PrintSheet({ data, open, onClose, onPrinted }) {
           <strong>Print preview</strong>
           <span>
             {data.paperSize || 'A4'} · {quantity} label{quantity > 1 ? 's' : ''} · {perPage}/page
+            {isCustom ? ` · ${data.templateName}` : ' · Standard'}
           </span>
         </div>
         <div className="print-actions">
@@ -77,7 +80,15 @@ export default function PrintSheet({ data, open, onClose, onPrinted }) {
           >
             {slots.map((slot) => (
               <div key={slot} className="a4-slot">
-                <SampleLabel data={data} compact={perPage >= 4} />
+                {isCustom ? (
+                  <CustomLabel
+                    template={data.templateSnapshot}
+                    values={data.customValues || {}}
+                    compact={perPage >= 4}
+                  />
+                ) : (
+                  <SampleLabel data={data} compact={perPage >= 4} />
+                )}
               </div>
             ))}
           </section>
